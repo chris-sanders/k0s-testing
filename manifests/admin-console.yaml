@@ -1,0 +1,820 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: admin-console
+---
+# Source: admin-console/templates/kotsadm-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm
+---
+# Source: admin-console/templates/secret-api-cluster-token.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-cluster-token
+  annotations:
+    "helm.sh/resource-policy": "keep"
+stringData:
+  kotsadm-cluster-token: 1e54b540-5c54-4602-9e87-ca48db31d148
+---
+# Source: admin-console/templates/secret-api-encryption.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-encryption
+data:
+  encryptionKey: "VHB2bGRGamRiM0lQRUtxVFQwSzl0UjdF"
+---
+# Source: admin-console/templates/secret-jwt.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-session
+  annotations:
+    "helm.sh/resource-policy": "keep"
+data:
+  key: "ZDIwYmFlNzEtZDY1Mi00NTQzLWI4YTQtODgzNmRlNGVkNmIz"
+---
+# Source: admin-console/templates/secret-pg.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-postgres
+  annotations:
+    "helm.sh/resource-policy": "keep"
+data:
+  password: "NGE0ODhhNWUtNTkzZC00MzVjLThkN2QtNDc3MjAxY2Y4Y2Zj"
+  uri: "cG9zdGdyZXNxbDovL2tvdHNhZG06NGE0ODhhNWUtNTkzZC00MzVjLThkN2QtNDc3MjAxY2Y4Y2ZjQGtvdHNhZG0tcG9zdGdyZXMva290c2FkbT9jb25uZWN0X3RpbWVvdXQ9MTAmc3NsbW9kZT1kaXNhYmxl"
+---
+# Source: admin-console/templates/secret-s3.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-minio
+  annotations:
+    "helm.sh/resource-policy": "keep"
+data:
+  accesskey: "ZWYzN2ZiZmItYWJkMS00MTUyLTgyZDgtNmM5NjE0Nzg3OWUx"
+  secretkey: "NmZhMGQwNzUtNWM4YS00MzQxLWI2MTYtYzk3YmZkMjRhMjI4"
+---
+# Source: admin-console/templates/secret-shared-password.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-password
+data:
+  passwordBcrypt: JDJhJDEwJDRzYTVQWGo1cVRTdkNTalYzbEVnOHVmcUdnQkc2TVY2eFZSbFF2RTE1WGN3Y1MuOS5BdC5P
+  passwordB64: c01Bb3E2eGFNZTZkeUZ2clplc1lUUGZmalhiOE9McWI=
+---
+# Source: admin-console/templates/kotsadm-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-confg
+data:
+  initial-app-images-pushed: "false"
+  minio-enabled-snapshots: "false"
+  registry-is-read-only: "false"
+  skip-preflights: "false"
+---
+# Source: admin-console/templates/postgres-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-postgres
+data:
+  passwd: |-
+    root:x:0:0:root:/root:/bin/ash
+    postgres:x:999:999:Linux User,,,:/var/lib/postgresql:/bin/sh
+---
+# Source: admin-console/templates/kotsadm-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-role
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - '*'
+---
+# Source: admin-console/templates/kotsadm-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kotsadm-role
+subjects:
+- kind: ServiceAccount
+  name: kotsadm
+  namespace: admin-console
+---
+# Source: admin-console/templates/kotsadm-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: admin-console
+spec:
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+  selector:
+    app: kotsadm
+  type: NodePort
+status:
+  loadBalancer: {}
+---
+# Source: admin-console/templates/minio-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-minio
+spec:
+  ports:
+  - name: service
+    port: 9000
+    targetPort: 9000
+  selector:
+    app: kotsadm-minio
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+# Source: admin-console/templates/postgres-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-postgres
+spec:
+  ports:
+  - name: postgres
+    port: 5432
+    targetPort: postgres
+  selector:
+    app: kotsadm-postgres
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+# Source: admin-console/templates/kotsadm-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm
+spec:
+  selector:
+    matchLabels:
+      app: kotsadm
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        backup.velero.io/backup-volumes: backup
+        pre.hook.backup.velero.io/command: '["/backup.sh"]'
+        pre.hook.backup.velero.io/timeout: 10m
+      creationTimestamp: null
+      labels:
+        app: kotsadm
+        helm.sh/chart: admin-console-1.76.1
+        app.kubernetes.io/name: admin-console
+        app.kubernetes.io/instance: admin-console
+        app.kubernetes.io/version: "1.76.1"
+        kots.io/backup: velero
+        kots.io/kotsadm: "true"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                - linux
+              - key: kubernetes.io/arch
+                operator: NotIn
+                values:
+                - arm64
+      containers:
+      - env:
+        - name: SHARED_PASSWORD_BCRYPT
+          valueFrom:
+            secretKeyRef:
+              key: passwordBcrypt
+              name: kotsadm-password
+        - name: AUTO_CREATE_CLUSTER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: kotsadm-cluster-token
+              name: kotsadm-cluster-token
+        - name: SESSION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: key
+              name: kotsadm-session
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: kotsadm-postgres
+        - name: POSTGRES_URI
+          valueFrom:
+            secretKeyRef:
+              key: uri
+              name: kotsadm-postgres
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_OWNER_KIND
+          value: deployment
+        - name: API_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: encryptionKey
+              name: kotsadm-encryption
+        - name: API_ENDPOINT
+          value: http://kotsadm.admin-console.svc.cluster.local:3000
+        - name: API_ADVERTISE_ENDPOINT
+          value: http://localhost:8800
+        - name: S3_ENDPOINT
+          value: http://kotsadm-minio:9000
+        - name: S3_BUCKET_NAME
+          value: kotsadm
+        - name: S3_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: accesskey
+              name: kotsadm-minio
+        - name: S3_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: secretkey
+              name: kotsadm-minio
+        - name: S3_BUCKET_ENDPOINT
+          value: "true"
+        - name: HTTP_PROXY
+        - name: HTTPS_PROXY
+        - name: NO_PROXY
+          value: kotsadm-postgres,kotsadm-minio,kotsadm-api-node
+        - name: IS_HELM_MANAGED
+          value: "true"
+        image: kotsadm/kotsadm:v1.76.1
+        imagePullPolicy: IfNotPresent
+        name: kotsadm
+        ports:
+        - containerPort: 3000
+          name: http
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /backup
+          name: backup
+        - mountPath: /tmp
+          name: tmp
+      initContainers:
+      - args:
+        - plan
+        env:
+        - name: SCHEMAHERO_DRIVER
+          value: postgres
+        - name: SCHEMAHERO_SPEC_FILE
+          value: /tables
+        - name: SCHEMAHERO_OUT
+          value: /migrations/plan.yaml
+        - name: SCHEMAHERO_URI
+          valueFrom:
+            secretKeyRef:
+              key: uri
+              name: kotsadm-postgres
+        image: kotsadm/kotsadm-migrations:v1.76.1
+        imagePullPolicy: IfNotPresent
+        name: schemahero-plan
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+        volumeMounts:
+        - mountPath: /migrations
+          name: migrations
+      - args:
+        - apply
+        env:
+        - name: SCHEMAHERO_DRIVER
+          value: postgres
+        - name: SCHEMAHERO_DDL
+          value: /migrations/plan.yaml
+        - name: SCHEMAHERO_URI
+          valueFrom:
+            secretKeyRef:
+              key: uri
+              name: kotsadm-postgres
+        image: kotsadm/kotsadm-migrations:v1.76.1
+        imagePullPolicy: IfNotPresent
+        name: schemahero-apply
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+        volumeMounts:
+        - mountPath: /migrations
+          name: migrations
+      - command:
+        - /restore-db.sh
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: kotsadm-postgres
+        image: kotsadm/kotsadm:v1.76.1
+        imagePullPolicy: IfNotPresent
+        name: restore-db
+        resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /backup
+          name: backup
+        - mountPath: /tmp
+          name: tmp
+      - command:
+        - /restore-s3.sh
+        env:
+        - name: S3_ENDPOINT
+          value: http://kotsadm-minio:9000
+        - name: S3_BUCKET_NAME
+          value: kotsadm
+        - name: S3_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: accesskey
+              name: kotsadm-minio
+        - name: S3_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: secretkey
+              name: kotsadm-minio
+        - name: S3_BUCKET_ENDPOINT
+          value: "true"
+        image: kotsadm/kotsadm:v1.76.1
+        imagePullPolicy: IfNotPresent
+        name: restore-s3
+        resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /backup
+          name: backup
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1001
+        runAsUser: 1001
+      serviceAccountName: kotsadm
+      volumes:
+      - emptyDir:
+          medium: Memory
+        name: migrations
+      - emptyDir: {}
+        name: backup
+      - emptyDir: {}
+        name: tmp
+status: {}
+---
+# Source: admin-console/templates/minio-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-minio
+spec:
+  selector:
+    matchLabels:
+      app: kotsadm-minio
+  serviceName: ""
+  template:
+    metadata:
+      annotations:
+        backup.velero.io/backup-volumes: kotsadm-minio,minio-config-dir,minio-cert-dir
+      labels:
+        app: kotsadm-minio
+        helm.sh/chart: admin-console-1.76.1
+        app.kubernetes.io/name: admin-console
+        app.kubernetes.io/instance: admin-console
+        app.kubernetes.io/version: "1.76.1"
+        kots.io/backup: velero
+        kots.io/kotsadm: "true"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -ce
+        - /usr/bin/docker-entrypoint.sh minio -C /home/minio/.minio/ --quiet server
+          /export
+        env:
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: accesskey
+              name: kotsadm-minio
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: secretkey
+              name: kotsadm-minio
+        - name: MINIO_BROWSER
+          value: "on"
+        - name: MINIO_UPDATE
+          value: "off"
+        image: minio/minio:RELEASE.2022-07-08T00-05-23Z
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /minio/health/live
+            port: service
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: kotsadm-minio
+        ports:
+        - containerPort: 9000
+          name: service
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /minio/health/ready
+            port: service
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 100m
+            memory: 200Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /export
+          name: kotsadm-minio
+        - mountPath: /home/minio/.minio/
+          name: minio-config-dir
+        - mountPath: /.minio/
+          name: minio-cert-dir
+      securityContext:
+        fsGroup: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
+        supplementalGroups:
+        - 1001
+      volumes:
+      - name: kotsadm-minio
+        persistentVolumeClaim:
+          claimName: kotsadm-minio
+      - emptyDir: {}
+        name: minio-config-dir
+      - emptyDir: {}
+        name: minio-cert-dir
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      labels:
+        helm.sh/chart: admin-console-1.76.1
+        app.kubernetes.io/name: admin-console
+        app.kubernetes.io/instance: admin-console
+        app.kubernetes.io/version: "1.76.1"
+        kots.io/backup: velero
+        kots.io/kotsadm: "true"
+        app.kubernetes.io/managed-by: Helm
+      name: kotsadm-minio
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 4Gi
+    status: {}
+---
+# Source: admin-console/templates/postgres-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  name: kotsadm-postgres
+spec:
+  selector:
+    matchLabels:
+      app: kotsadm-postgres
+  serviceName: ""
+  template:
+    metadata:
+      labels:
+        app: kotsadm-postgres
+        helm.sh/chart: admin-console-1.76.1
+        app.kubernetes.io/name: admin-console
+        app.kubernetes.io/instance: admin-console
+        app.kubernetes.io/version: "1.76.1"
+        kots.io/backup: velero
+        kots.io/kotsadm: "true"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      containers:
+      - env:
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        - name: POSTGRES_USER
+          value: kotsadm
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: kotsadm-postgres
+        - name: POSTGRES_DB
+          value: kotsadm
+        image: postgres:10.21-alpine
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -i
+            - -c
+            - pg_isready -U kotsadm -h 127.0.0.1 -p 5432
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        name: kotsadm-postgres
+        ports:
+        - containerPort: 5432
+          name: postgres
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -i
+            - -c
+            - pg_isready -U kotsadm -h 127.0.0.1 -p 5432
+          initialDelaySeconds: 1
+          periodSeconds: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: kotsadm-postgres
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /var/run/postgresql
+          name: run
+        - mountPath: /etc/passwd
+          name: etc-passwd
+          subPath: passwd
+      securityContext:
+        fsGroup: 999
+        runAsUser: 999
+      volumes:
+      - name: kotsadm-postgres
+        persistentVolumeClaim:
+          claimName: kotsadm-postgres
+      - emptyDir: {}
+        name: tmp
+      - emptyDir: {}
+        name: run
+      - configMap:
+          items:
+          - key: passwd
+            mode: 420
+            path: passwd
+          name: kotsadm-postgres
+        name: etc-passwd
+  updateStrategy: {}
+  volumeClaimTemplates:
+  - metadata:
+      labels:
+        helm.sh/chart: admin-console-1.76.1
+        app.kubernetes.io/name: admin-console
+        app.kubernetes.io/instance: admin-console
+        app.kubernetes.io/version: "1.76.1"
+        kots.io/backup: velero
+        kots.io/kotsadm: "true"
+        app.kubernetes.io/managed-by: Helm
+      name: kotsadm-postgres
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+    status: {}
+---
+# Source: admin-console/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "admin-console-test-connection"
+  labels:
+    helm.sh/chart: admin-console-1.76.1
+    app.kubernetes.io/name: admin-console
+    app.kubernetes.io/instance: admin-console
+    app.kubernetes.io/version: "1.76.1"
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['admin-console:80']
+  restartPolicy: Never
