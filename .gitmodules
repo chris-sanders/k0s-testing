@@ -1,0 +1,3 @@
+[submodule "charts/dynamic-localpv-provisioner"]
+	path = charts/dynamic-localpv-provisioner
+	url = https://github.com/openebs/dynamic-localpv-provisioner.git

@@ -5,7 +5,7 @@ metadata:
 spec:
   hosts:
     - ssh:
-        address: 35.239.32.5
+        address: 34.123.8.31
         user: chris
         port: 22
         #keyPath: /Users/chris/.ssh/id_rsa
@@ -15,11 +15,12 @@ spec:
         - --enable-worker
         - --no-taints
       files:
-        - src: ./manifests/admin-console.yaml
-          dstDir: /var/lib/k0s/manifests/admin-console
-          perm: 0755
+        - src: ./charts/dynamic-localpv-provisioner/deploy/helm/charts/*
+          dstDir: /var/lib/charts/dynamic-localpv-provisioner
+          perm: 0744
+          dirPerm: 0755
     - ssh:
-        address: 34.66.197.73 
+        address: 34.170.144.104
         user: chris
         port: 22
         #keyPath: /Users/chris/.ssh/id_rsa
@@ -29,11 +30,11 @@ spec:
         - --enable-worker
         - --no-taints
       files:
-        - src: ./manifests/admin-console.yaml
-          dstDir: /var/lib/k0s/manifests/admin-console
-          perm: 0755
+        - src: ./charts/dynamic-localpv-provisioner/deploy/helm/charts/*
+          dstDir: /var/lib/charts/dynamic-localpv-provisioner
+          perm: 0744
     - ssh:
-        address: 34.134.67.238 
+        address: 35.193.241.13 
         user: chris
         port: 22
         #keyPath: /Users/chris/.ssh/id_rsa
@@ -43,11 +44,12 @@ spec:
         - --enable-worker
         - --no-taints
       files:
-        - src: ./manifests/admin-console.yaml
-          dstDir: /var/lib/k0s/manifests/admin-console
-          perm: 0755
+        - src: ./charts/dynamic-localpv-provisioner/deploy/helm/charts/*
+          dstDir: /var/lib/charts/dynamic-localpv-provisioner
+          perm: 0744
   k0s:
-    version: 1.24.2+k0s.0
+    #version: 1.24.2+k0s.0
+    version: 1.23.8+k0s.0
     dynamicConfig: false
     config:
       spec:
@@ -60,13 +62,13 @@ spec:
             repositories:
               - name: openebs-localpv
                 url: https://openebs.github.io/dynamic-localpv-provisioner
-              #- name: replicated
-              #  url: oci://registry.replicated.com/library/admin-console
+              - name: chris-sanders
+                url: https://chris-sanders.github.io/helm-charts
             charts:
               - name: openebs-local-pv
                 chartname: openebs-localpv/localpv-provisioner
                 namespace: kube-system
-                version: "3.2.0"
+                version: "3.3.0"
                 values: |
                   openebsNDM:
                     enabled: false
@@ -75,10 +77,12 @@ spec:
                   hostpathClass:
                     name: local
                     isDefaultClass: true
-                  fullnameOverride: openebs2
-              #- name: kotsadm
-              #  chartname: replicated/kotsadm
-              #  namespace: kots
-              #  version: "1.76.1"
-        #  storage:
-        #    type: openebs_local_storage
+                  #localpv:
+                  #  replicas: 3
+                  fullnameOverride: openebs-local-pv
+              - name: kotsadm
+                chartname: chris-sanders/admin-console
+                namespace: admin-console
+                version: "1.76.1"
+          #storage:
+          #  type: openebs_local_storage
