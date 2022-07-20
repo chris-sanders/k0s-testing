@@ -1,0 +1,95 @@
+apiVersion: k0sctl.k0sproject.io/v1beta1
+kind: Cluster
+metadata:
+  name: k0s-cluster
+spec:
+  hosts:
+    - ssh:
+        address: 34.68.131.170
+        user: chris
+        port: 22
+        #keyPath: /Users/chris/.ssh/id_rsa
+      role: controller
+      installFlags:
+        - --disable-components konnectivity-server
+        - --enable-worker
+        - --no-taints
+    - ssh:
+        address: 35.194.44.190  
+        user: chris
+        port: 22
+        #keyPath: /Users/chris/.ssh/id_rsa
+      role: controller
+      installFlags:
+        - --disable-components konnectivity-server
+        - --enable-worker
+        - --no-taints
+    - ssh:
+        address: 34.69.120.122
+        user: chris
+        port: 22
+        #keyPath: /Users/chris/.ssh/id_rsa
+      role: controller
+      installFlags:
+        - --disable-components konnectivity-server
+        - --enable-worker
+        - --no-taints
+  k0s:
+    version: 1.23.8+k0s.0
+    dynamicConfig: false
+    config:
+      spec:
+        #network:
+        #  provider: calico
+        #podSecurityPolicy:
+        #  defaultPolicy: 00-k0s-privileged
+        extensions:
+          helm:
+            repositories:
+              - name: openebs-localpv
+                url: https://openebs.github.io/dynamic-localpv-provisioner
+              - name: replicated
+                url: oci://registry.replicated.com/library/admin-console
+            charts:
+              - name: openebs-local-pv
+                chartname: openebs-localpv/localpv-provisioner
+                namespace: kube-system
+                version: "3.2.0"
+                values: |
+                  openebsNDM:
+                    enabled: false
+                  deviceClass:
+                    enabled: false
+                  hostpathClass:
+                    name: local
+              - name: kotsadm
+                chartname: replicated/kotsadm
+                namespace: kots
+                version: "1.76.1"
+            #charts:
+            #  - name: openebs-local-pv
+            #    chartname: openebs/openebs
+            #    version: "3.2.0"
+            #    values: |
+            #      provisioner:
+            #        enabled: false
+            #      apiserver:
+            #        enabled: false
+            #      snapshotOpertor:
+            #        enabled: false
+            #      ndm:
+            #        enabled: false
+            #      ndmOperator:
+            #        enabled: false
+            #      ndmExporter:
+            #        enabled: false
+            #      analytics:
+            #        enabled: false
+            #    namespace: openebs
+        #  storage:
+        #    type: openebs_local_storage
+        #images:
+        #  calico:
+        #    cni:
+        #      image: docker.io/calico/cni
+        #      version: v3.23.2
