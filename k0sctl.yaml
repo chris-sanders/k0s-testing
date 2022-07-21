@@ -12,35 +12,16 @@ spec:
         - --disable-components konnectivity-server
         - --enable-worker
         - --no-taints
-      #files:
-      #  - src: ./manifests/cluster-roles/*
-      #    dstDir: /var/lib/k0s/manifests/cluster-roles/
-      #    perm: 0644
-      #    dirPerm: 0755
     - ssh:
         address: 34.170.144.104
         user: chris
       role: controller
       installFlags: *installFlags
-        #- --disable-components konnectivity-server
-        #- --enable-worker
-        #- --no-taints
-      #files:
-      #  - src: ./charts/dynamic-localpv-provisioner/deploy/helm/charts/*
-      #    dstDir: /var/lib/charts/dynamic-localpv-provisioner
-      #    perm: 0744
     - ssh:
         address: 35.193.241.13 
         user: chris
       role: controller
       installFlags: *installFlags
-        #- --disable-components konnectivity-server
-        #- --enable-worker
-        #- --no-taints
-      #files:
-      #  - src: ./charts/dynamic-localpv-provisioner/deploy/helm/charts/*
-      #    dstDir: /var/lib/charts/dynamic-localpv-provisioner
-      #    perm: 0744
   k0s:
     #version: 1.24.2+k0s.0
     version: 1.23.8+k0s.0
@@ -76,5 +57,3 @@ spec:
                   adminConsole:
                     minimalRBAC: false
                     helmManaged: false
-          #storage:
-          #  type: openebs_local_storage
