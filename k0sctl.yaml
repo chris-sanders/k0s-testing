@@ -5,7 +5,7 @@ metadata:
 spec:
   hosts:
     - ssh:
-        address: 34.123.8.31
+        address: 34.121.5.211
         user: chris
       role: controller
       installFlags: &installFlags
@@ -13,12 +13,12 @@ spec:
         - --enable-worker
         - --no-taints
     - ssh:
-        address: 34.170.144.104
+        address: 34.171.10.67
         user: chris
       role: controller
       installFlags: *installFlags
     - ssh:
-        address: 35.193.241.13 
+        address: 34.136.17.42
         user: chris
       role: controller
       installFlags: *installFlags
@@ -52,7 +52,7 @@ spec:
               - name: zz-kotsadm
                 chartname: chris-sanders/admin-console
                 namespace: admin-console
-                version: "1.76.1-6"
+                version: "1.76.1-7"
                 values: |
                   adminConsole:
                     minimalRBAC: false
